@@ -101,3 +101,34 @@ class YellowpagesscraperDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+
+
+class ForceUTF8Response(object):
+    """
+    Middleware class to force the response encoding to UTF-8.
+
+    Attributes:
+        encoding (str): The encoding to be used for decoding the response body.
+
+    Methods:
+        process_response(request, response, spider): Process the response and replace the body with a UTF-8 encoded version.
+
+    """
+
+    encoding = 'cp1252'
+
+    def process_response(self, request, response, spider):
+        """
+        Process the response and replace the body with a UTF-8 encoded version.
+
+        Args:
+            request (Request): The request object.
+            response (Response): The response object.
+            spider (Spider): The spider object.
+
+        Returns:
+            Response: The modified response object with UTF-8 encoded body.
+
+        """
+        new_body = response.text.encode(self.encoding).decode('utf-8')
+        return response.replace(body=new_body, encoding=self.encoding)
